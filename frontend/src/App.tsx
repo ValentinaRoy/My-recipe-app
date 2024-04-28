@@ -48,6 +48,28 @@ const App = () =>{
       console.log(error);
     }
   }
+
+  const addFavouriteRecipe = async (recipe:Recipe)=>{
+    try {
+      await api.addFavouriteRecipe(recipe);
+      setFavouriteRecipes([...favouriteRecipes,recipe])
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const removeFavouriteRecipe = async(recipe:Recipe)=>{
+    try {
+      await api.removeFavouriteRecipe(recipe);
+      const updatedRecipes = favouriteRecipes.filter(
+        (favRecipe)=> recipe.id !== favRecipe.id);
+      setFavouriteRecipes(updatedRecipes);
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+
   return(
     <div>
       <div className='tabs'>
@@ -67,9 +89,18 @@ const App = () =>{
             <button type='submit'>Submit</button>
           </form>
       
-          {recipes.map((recipe)=>(
-            <RecipeCard recipe={recipe} onClick={() =>setSelectedRecipe(recipe)}/>
-          ))}
+          {recipes.map((recipe)=>{
+            const isFavourite = favouriteRecipes.some(
+              (favRecipe)=> recipe.id === favRecipe.id
+             );
+            return (
+              <RecipeCard
+                recipe={recipe}
+                onClick={() => setSelectedRecipe(recipe)}
+                onFavouriteButtonClick={isFavourite ? removeFavouriteRecipe : addFavouriteRecipe} 
+                isFavourite={isFavourite}/>
+            );
+          })}
 
           <button className='view-more-button' onClick={handleViewMoreClick}>view more</button>
         </>
@@ -81,6 +112,8 @@ const App = () =>{
           <RecipeCard 
             recipe={recipe} 
             onClick={()=>setSelectedRecipe(recipe)}
+            onFavouriteButtonClick={removeFavouriteRecipe}
+            isFavourite={true}
           />
           ))}
         </div>
@@ -88,7 +121,8 @@ const App = () =>{
       {selectedRecipe ? 
       <RecipeModal 
         recipeId={selectedRecipe.id.toString()} 
-        onClose = {()=>{setSelectedRecipe(undefined)}} /> : null}
+        onClose = {()=>{setSelectedRecipe(undefined)}} 
+      /> : null}
         
     </div>
   )
