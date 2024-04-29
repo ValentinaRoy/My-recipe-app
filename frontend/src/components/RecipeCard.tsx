@@ -25,7 +25,7 @@ const RecipeCard=({
                         event.stopPropagation()
                         onFavouriteButtonClick(recipe)
                 }}>
-                {isFavourite ? (<AiFillHeart size={25} color="red"/>) : (<AiOutlineHeart size={25}/>)}
+                {isFavourite ? (<AiFillHeart size={30} color="red"/>) : (<AiOutlineHeart size={30}/>)}
                 </span>
                 <h3>{recipe.title}</h3>
             </div>
